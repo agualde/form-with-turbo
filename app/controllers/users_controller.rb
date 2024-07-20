@@ -25,12 +25,14 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      @cities = User.distinct.pluck(:city)
       respond_to do |format|
         format.html { redirect_to users_path, notice: 'User was successfully created.' }
         format.turbo_stream { 
           render turbo_stream: [
             turbo_stream.append('user-table', partial: 'user_row', locals: { user: @user }),
-            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new })
+            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new }),
+            turbo_stream.replace('city-filter', partial: 'city_filter', locals: { cities: @cities, selected_city: nil })
           ]
         }
       end

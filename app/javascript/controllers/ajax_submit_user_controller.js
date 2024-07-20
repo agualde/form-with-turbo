@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "form", "table", "errors" ]
+  static targets = [ "form", "table", "errors", "cityFilter" ]
 
   connect() {
     console.log("UserForm controller connected")
@@ -37,12 +37,23 @@ export default class extends Controller {
           this.clearErrors()
         } else if (action === 'replace' && target === 'new_user_form') {
           this.formTarget.innerHTML = content.querySelector('form').innerHTML
+        } else if (action === 'replace' && target === 'city-filter') {
+          this.updateCityFilter(content)
         }
       })
     })
     .catch(error => {
       console.error("Error:", error)
     })
+  }
+
+  updateCityFilter(content) {
+    const newSelect = content.querySelector('select')
+    const currentSelect = this.cityFilterTarget
+    
+    // Update options
+    currentSelect.innerHTML = newSelect.innerHTML
+    currentSelect.selectedIndex = 0  // Reset to "All Cities" if the current selection is no longer available
   }
 
   clearErrors() {
