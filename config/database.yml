@@ -17,6 +17,7 @@ default: &default
   password:
   host: localhost
   database: test_project_main_development
+  url: <%= ENV['JAWSDB_URL'] %>
 
 development:
   <<: *default
