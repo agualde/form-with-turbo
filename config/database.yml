@@ -54,3 +54,5 @@ production:
   database: test_project_main_production
   username: test_project_main
   password: <%= ENV["TEST_PROJECT_MAIN_DATABASE_PASSWORD"] %>
+  host: localhost
+  socket: ''
