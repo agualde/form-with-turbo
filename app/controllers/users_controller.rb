@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
+    @users = User.all.order(created_at: :asc)
     @cities = User.distinct.pluck(:city)
 
     if params[:city].present?
@@ -8,6 +8,17 @@ class UsersController < ApplicationController
     end
     
     @user = User.new
+  
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'user-table',
+          partial: 'user_table',
+          locals: { users: @users }
+        )
+      end
+    end
   end
 
   def create
