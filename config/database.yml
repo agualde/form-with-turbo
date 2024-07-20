@@ -52,9 +52,9 @@ test:
 production:
   adapter: mysql2
   encoding: utf8mb4
-  database: <%= ENV['MYSQLDATABASE'] %>
-  username: <%= ENV['MYSQLUSER'] %>
-  password: <%= ENV['MYSQL_ROOT_PASSWORD'] %>
-  host: <%= ENV['MYSQLHOST'] %>
-  port: <%= ENV['MYSQLPORT'] %>
+  database: <%= ENV['MYSQL_DATABASE'] %>
+  username: <%= ENV['MYSQL_USERNAME'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+  host: <%= ENV['MYSQL_ADDRESS'] %>
+  port: <%= ENV['MYSQL_PORT'] %>
   
