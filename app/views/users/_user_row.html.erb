@@ -3,4 +3,5 @@
   <td><%= user.email %></td>
   <td><%= user.city %></td>
   <td><%= user.telephone_number %></td>
+  <td class="d-flex justify-content-end"><%= button_to 'X', user_path(user), method: :delete, data: { turbo: false, turbo_confirm: 'Are you sure?' }, class: "btn" %></td>
 </tr>
