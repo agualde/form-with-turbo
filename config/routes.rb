@@ -7,6 +7,9 @@ Rails.application.routes.draw do
 
   resources :users
 
+
+  post "reset" => "users#reset", as: :reset_users
+
   # Defines the root path route ("/")
   root "users#index"
 end

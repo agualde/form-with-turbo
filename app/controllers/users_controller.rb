@@ -53,6 +53,12 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: 'User was successfully deleted.'
   end
 
+  def reset
+    ::ResetUsersToInitialStateService.call
+
+    redirect_to users_path, notice: 'Users successfully reset.'
+  end
+
   private
 
   def user_params
