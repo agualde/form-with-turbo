@@ -54,9 +54,9 @@ class UsersController < ApplicationController
   end
 
   def reset
-    ::ResetUsersToInitialStateService.call
+    ResetUsersToInitialStateService.call
 
-    redirect_to users_path, notice: 'Users successfully reset.'
+    redirect_to users_path, notice: 'Test successfully reset.'
   end
 
   private

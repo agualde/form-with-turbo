@@ -11,6 +11,6 @@ document.addEventListener('turbo:load', function() {
       setTimeout(function() {
         flashMessage.remove();
       }, 200);
-    }, 1000);
+    }, 1500);
   });
 });
