@@ -11,13 +11,15 @@ export default class extends Controller {
     event.preventDefault()
     
     const formData = new FormData(this.formTarget)
+    const token = document.querySelector('meta[name="csrf-token"]').content;
 
     fetch(this.formTarget.action, {
       method: 'POST',
       body: formData,
       headers: {
         'Accept': 'text/vnd.turbo-stream.html',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': token
       }
     })
     .then(response => response.text())

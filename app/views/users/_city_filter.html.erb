@@ -1,14 +1,13 @@
 <div class="row g-3 align-items-end mb-3">
   <div class="col-auto">
     <%= label_tag :city, "Filter by City:", class: 'form-label' %>
-    <%= select_tag :city, 
-                  options_for_select(@cities, params[:city]), 
-                  prompt: "All Cities", 
-                  class: 'form-select',
-                  data: { 
-                    ajax_submit_user_target: "cityFilter",
-                    filter_users_target: "select",
-                    action: "change->filter-users#filter"
-                  } %>
+    <%= text_field_tag :city, 
+                        @city_selected,
+                        class: 'form-control',
+                        data: { 
+                          ajax_submit_user_target: "cityFilter",
+                          filter_users_target: "select",
+                          action: "keyup->filter-users#search"
+                        } %>
   </div>
 </div>

@@ -1,11 +1,9 @@
 class UsersController < ApplicationController
   def index
     @users = User.all.order(created_at: :asc)
-    @cities = User.distinct.pluck(:city)
-
-    if params[:city].present?
-      @users = @users.where(city: params[:city])
-    end
+    @city_selected = params[:city]
+    
+    filter_by_city if @city_selected.present?
 
     @user = User.new
 
@@ -22,17 +20,17 @@ class UsersController < ApplicationController
   end
 
   def create
+    Rails.logger.debug "CSRF Token: #{params[:authenticity_token]}"
+debugger
     @user = User.new(user_params)
 
     if @user.save
-      @cities = User.distinct.pluck(:city)
       respond_to do |format|
         format.html { redirect_to users_path, notice: 'User was successfully created.' }
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.append('user-table', partial: 'user_row', locals: { user: @user }),
             turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new }),
-            turbo_stream.replace('city-filter', partial: 'city_filter', locals: { cities: @cities, selected_city: nil })
           ]
         end
       end
@@ -60,6 +58,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def filter_by_city
+    @users = @users.where("city like ?", @city_selected)
+  end
 
   def user_params
     params.require(:user).permit(:name, :email, :city, :telephone_number)

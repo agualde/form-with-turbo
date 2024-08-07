@@ -35,4 +35,18 @@ export default class extends Controller {
       console.error("Error:", error)
     })
   }
+
+  search() {
+    this.debounce(() => {  
+      this.filter()
+    });
+  }
+
+  debounce(func, timeout = 300){
+    if (this.timer) {
+      clearTimeout(this.timer)
+      console.debug("Debounce timer cleared")
+    }
+    this.timer = setTimeout(func, timeout);
+  }
 }
