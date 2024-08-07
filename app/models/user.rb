@@ -3,10 +3,12 @@ class User < ApplicationRecord
   validates :city, presence: true
 
   validate :fields_without_html_tags
-
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
-
   validates :telephone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 15 }, allow_blank: true
+  validate :with_valid_city
+
+  after_create_commit { broadcast_update_to "users", target: "user_table", partial: "users/user_table", locals: { users: User.all.order(created_at: :asc) } }
+  after_destroy_commit { broadcast_update_to "users", target: "user_table", partial: "users/user_table", locals: { users: User.all.order(created_at: :asc) } }
 
   private
 
@@ -16,5 +18,15 @@ class User < ApplicationRecord
         errors.add(field, "cannot contain HTML tags")
       end
     end
+  end
+
+  def with_valid_city
+    return if city.blank? || city.downcase.in?(cities_set)
+
+    errors.add(city, "city has to be a real city")
+  end
+
+  def cities_set
+    @cities_set ||= Set.new(File.readlines("lib/assets/cities.txt").map { |city| city.strip.downcase })
   end
 end

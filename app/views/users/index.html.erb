@@ -1,32 +1,22 @@
-<div class="container mt-5" data-controller="ajax-submit-user">
-  <div data-controller="filter-users">
-    <div class="d-flex justify-content-between align-center">
-      <div id="city-filter">
-        <%= render 'city_filter', cities: @cities, selected_city: params[:city] %>
+<%= turbo_stream_from "users" %>
+
+<div class="container mt-5" >
+  <div class="row">
+    <div data-controller="filter-users">
+      <div class="d-flex justify-content-between align-center">
+        <div id="city-filter">
+          <%= render 'city_filter', cities: @cities, selected_city: params[:city] %>
+        </div>
+        <div class="reset-button-wrapper">
+          <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success" %>
+        </div>
       </div>
-      <div class="reset-button-wrapper">
-        <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success", data: { turbo: false } %>
-      </div>
+      <%= render partial: "user_table", locals: { users: @users } %>  
     </div>
 
-    <table class="table table-striped table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>City</th>
-          <th>Telephone</th>
-          <th class="d-flex justify-content-end">Delete User</th>
-        </tr>
-      </thead>
-      <tbody data-ajax-submit-user-target="table" data-filter-users-target="table">
-        <%= render partial: "user_table", locals: { users: @users } %>
-      </tbody>
-    </table>
-  </div>
-
-  <div >
-    <h3 class="mt-5 mb-3">Add New User</h3>
-    <%= render partial: 'form', locals: { user: @user } %>
+    <div >
+      <h3 class="mt-5 mb-3">Add New User</h3>
+      <%= render partial: 'form', locals: { user: @user } %>
+    </div>
   </div>
 </div>

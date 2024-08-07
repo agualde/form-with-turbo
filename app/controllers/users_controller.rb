@@ -9,11 +9,9 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          'user-table',
-          partial: 'user_table',
-          locals: { users: @users }
-        )
+        render turbo_stream: [
+          turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users })
+        ]
       end
     end
   end
@@ -22,18 +20,19 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      @users = User.all.order(created_at: :asc)
+
       respond_to do |format|
         format.html { redirect_to users_path, notice: 'User was successfully created.' }
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.append('user-table', partial: 'user_row', locals: { user: @user }),
-            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new }),
+            turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users }),
+            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new })
           ]
         end
       end
     else
       respond_to do |format|
-        format.html { render :index }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('new_user_form', partial: 'form', locals: { user: @user })
         end

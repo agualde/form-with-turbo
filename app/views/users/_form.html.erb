@@ -1,46 +1,48 @@
-<%= form_with(model: user, id: 'new_user_form', data: { ajax_submit_user_target: "form", action: "submit->ajax-submit-user#submitForm" }) do |form| %>
-  <% if user.errors.any? %>
-    <div class="alert alert-danger">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-      <ul>
-        <% user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+<%= turbo_frame_tag "new_user_form" do %>
+  <%= form_with(model: user, id: 'new_user_form') do |form| %>
+    <% if user.errors.any? %>
+      <div class="alert alert-danger">
+        <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+        <ul>
+          <% user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="row g-3">
+      <div class="col-md-3">
+        <%= form.label :name, class: "form-label" %>
+        <%= form.text_field :name, class: "form-control #{user.errors[:name].any? ? 'is-invalid' : ''}" %>
+        <% if user.errors[:name].any? %>
+          <div class="invalid-feedback"><%= user.errors[:name].join(', ') %></div>
         <% end %>
-      </ul>
+      </div>
+      <div class="col-md-3">
+        <%= form.label :email, class: "form-label" %>
+        <%= form.email_field :email, class: "form-control #{user.errors[:email].any? ? 'is-invalid' : ''}" %>
+        <% if user.errors[:email].any? %>
+          <div class="invalid-feedback"><%= user.errors[:email].join(', ') %></div>
+        <% end %>
+      </div>
+      <div class="col-md-3">
+        <%= form.label :city, class: "form-label" %>
+        <%= form.text_field :city, class: "form-control #{user.errors[:city].any? ? 'is-invalid' : ''}" %>
+        <% if user.errors[:city].any? %>
+          <div class="invalid-feedback"><%= user.errors[:city].join(', ') %></div>
+        <% end %>
+      </div>
+      <div class="col-md-3">
+        <%= form.label :telephone_number, class: "form-label" %>
+        <%= form.telephone_field :telephone_number, class: "form-control #{user.errors[:telephone_number].any? ? 'is-invalid' : ''}" %>
+        <% if user.errors[:telephone_number].any? %>
+          <div class="invalid-feedback"><%= user.errors[:telephone_number].join(', ') %></div>
+        <% end %>
+      </div>
+      <div class="col-12">
+        <%= form.submit "Add User", class: "btn btn-primary" %>
+      </div>
     </div>
   <% end %>
-
-  <div class="row g-3">
-    <div class="col-md-3">
-      <%= form.label :name, class: "form-label" %>
-      <%= form.text_field :name, class: "form-control #{user.errors[:name].any? ? 'is-invalid' : ''}" %>
-      <% if user.errors[:name].any? %>
-        <div class="invalid-feedback"><%= user.errors[:name].join(', ') %></div>
-      <% end %>
-    </div>
-    <div class="col-md-3">
-      <%= form.label :email, class: "form-label" %>
-      <%= form.email_field :email, class: "form-control #{user.errors[:email].any? ? 'is-invalid' : ''}" %>
-      <% if user.errors[:email].any? %>
-        <div class="invalid-feedback"><%= user.errors[:email].join(', ') %></div>
-      <% end %>
-    </div>
-    <div class="col-md-3">
-      <%= form.label :city, class: "form-label" %>
-      <%= form.text_field :city, class: "form-control #{user.errors[:city].any? ? 'is-invalid' : ''}" %>
-      <% if user.errors[:city].any? %>
-        <div class="invalid-feedback"><%= user.errors[:city].join(', ') %></div>
-      <% end %>
-    </div>
-    <div class="col-md-3">
-      <%= form.label :telephone_number, class: "form-label" %>
-      <%= form.telephone_field :telephone_number, class: "form-control #{user.errors[:telephone_number].any? ? 'is-invalid' : ''}" %>
-      <% if user.errors[:telephone_number].any? %>
-        <div class="invalid-feedback"><%= user.errors[:telephone_number].join(', ') %></div>
-      <% end %>
-    </div>
-    <div class="col-12">
-      <%= form.submit "Add User", class: "btn btn-primary" %>
-    </div>
-  </div>
 <% end %>

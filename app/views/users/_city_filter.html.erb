@@ -1,13 +1,3 @@
-<div class="row g-3 align-items-end mb-3">
-  <div class="col-auto">
-    <%= label_tag :city, "Filter by City:", class: 'form-label' %>
-    <%= text_field_tag :city, 
-                        @city_selected,
-                        class: 'form-control',
-                        data: { 
-                          ajax_submit_user_target: "cityFilter",
-                          filter_users_target: "select",
-                          action: "keyup->filter-users#search"
-                        } %>
-  </div>
-</div>
+<%= form_with(url: users_path, method: :get, data: { controller: 'user-search', action: "keyup->user-search#filter" }) do |f| %>
+  <%= f.text_field :city, value: @city_selected %>
+<% end %>
