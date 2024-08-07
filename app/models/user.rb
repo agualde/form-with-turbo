@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
 
-  validates :telephone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10, maximum: 15 }
+  validates :telephone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 15 }, allow_blank: true
 
   private
 
