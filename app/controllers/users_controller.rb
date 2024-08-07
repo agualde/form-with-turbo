@@ -1,11 +1,10 @@
 class UsersController < ApplicationController
   def index
     @users = User.all.order(created_at: :asc)
-    @city_selected = params[:city]
-    
-    filter_by_city if @city_selected.present?
-
     @user = User.new
+    @city_selected = params[:city]
+
+    filter_by_city if @city_selected.present?
 
     respond_to do |format|
       format.html
@@ -20,8 +19,6 @@ class UsersController < ApplicationController
   end
 
   def create
-    Rails.logger.debug "CSRF Token: #{params[:authenticity_token]}"
-debugger
     @user = User.new(user_params)
 
     if @user.save
@@ -60,7 +57,7 @@ debugger
   private
 
   def filter_by_city
-    @users = @users.where("city like ?", @city_selected)
+    @users = @users.where("city like ?", "%#{@city_selected}%")
   end
 
   def user_params
