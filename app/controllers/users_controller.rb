@@ -23,7 +23,6 @@ class UsersController < ApplicationController
       @users = User.all.order(created_at: :asc)
 
       respond_to do |format|
-        format.html { redirect_to users_path, notice: 'User was successfully created.' }
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users }),

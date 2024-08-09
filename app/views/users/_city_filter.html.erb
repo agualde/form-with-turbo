@@ -1,3 +1,11 @@
-<%= form_with(url: users_path, method: :get, data: { controller: 'user-search', action: "keyup->user-search#filter" }) do |f| %>
-  <%= f.text_field :city, placeholder: "Filter by City", value: @city_selected, class: "form-control" %>
-<% end %>
+<div data-controller="filter-users">
+  <div class="d-flex justify-content-between align-center mb-3">
+    <div id="city-filter">
+      <%= form_with(url: users_path, method: :get, data: { controller: 'user-search', action: "keyup->user-search#filter", turbo_stream: true }) do |f| %>
+        <%= f.text_field :city, placeholder: "Filter by City", value: @city_selected, class: "form-control" %>
+      <% end %>
+    </div>
+    <div class="reset-button-wrapper">
+      <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success" %>
+    </div>
+  </div>

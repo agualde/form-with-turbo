@@ -2,21 +2,11 @@
 
 <div class="container mt-5" >
   <div class="row">
-    <div data-controller="filter-users">
-      <div class="d-flex justify-content-between align-center mb-3">
-        <div id="city-filter">
-          <%= render 'city_filter', cities: @cities, selected_city: params[:city] %>
-        </div>
-        <div class="reset-button-wrapper">
-          <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success" %>
-        </div>
-      </div>
+      <%= render 'city_filter' %>
       <%= render partial: "user_table", locals: { users: @users } %>  
-    </div>
+  </div>
 
-    <div >
-      <h3 class="mt-5 mb-3">Add New User</h3>
-      <%= render partial: 'form', locals: { user: @user } %>
-    </div>
+  <div>
+    <%= render partial: 'form', locals: { user: @user } %>
   </div>
 </div>
