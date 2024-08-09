@@ -1,13 +1,14 @@
 <%= turbo_frame_tag "user_filter" do %>
-  <div data-controller="filter-users">
+  <div data-controller="user-search clear-users-search">
     <div class="d-flex justify-content-between align-center mb-3">
-      <div id="city-filter">
-        <%= form_with(url: users_path, method: :get, data: { controller: 'user-search', action: "keyup->user-search#filter", turbo_stream: true }) do |f| %>
-          <%= f.text_field :search_term, placeholder: "Filter Users", value: @search_term, class: "form-control" %>
+      <div class="d-flex" id="city-filter">
+        <%= form_with(url: users_path, method: :get, data: { user_search_target: "form", action: "keyup->user-search#filter", turbo_stream: true }) do |f| %>
+          <%= f.text_field :search_term, placeholder: "Filter Users", value: @search_term, class: "form-control", data: { user_search_target: "input" } %>
         <% end %>
+        <div class="btn btn-success mx-3" data-action="click->user-search#clearAndSubmit" data-action="click->user-search#filter">X</div>
       </div>
       <div class="reset-button-wrapper">
-        <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success" %>
+        <%= button_to "Reset Test", reset_users_path, method: :post, class: "btn btn-success", data: { action: "click->user-search#clear" } %>
       </div>
     </div>
   </div>
