@@ -2,9 +2,9 @@ class UsersController < ApplicationController
   def index
     @users = User.all.order(created_at: :asc)
     @user = User.new
-    @city_selected = params[:city]
+    @search_term = params[:search_term]
 
-    filter_by_city if @city_selected.present?
+    filter_by_city if @search_term.present?
 
     respond_to do |format|
       format.html
@@ -55,7 +55,11 @@ class UsersController < ApplicationController
   private
 
   def filter_by_city
-    @users = @users.where("city like ?", "%#{@city_selected}%")
+    columns = %w[city name email telephone_number]
+    conditions = columns.map { |column| "#{column} LIKE ?" }.join(" OR ")
+    values = Array.new(columns.size, "%#{@search_term}%")
+
+    @users = @users.where(conditions, *values)
   end
 
   def user_params
