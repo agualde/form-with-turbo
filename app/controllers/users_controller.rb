@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
+  before_action :set_search, only: %i[index create]
+  before_action :clear_search, only: %i[reset]
+
   def index
     @users = User.all.order(created_at: :asc)
     @user = User.new
-    @search_term = params[:search_term]
 
     filter_by_city if @search_term.present?
 
@@ -10,7 +12,9 @@ class UsersController < ApplicationController
       format.html
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users })
+          turbo_stream.replace('user_filter', partial: 'user_filter', locals: { users: @users }),
+          turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users }),
+          turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new })
         ]
       end
     end
@@ -21,6 +25,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @users = User.all.order(created_at: :asc)
+      filter_by_city if @search_term.present?
 
       respond_to do |format|
         format.turbo_stream do
@@ -53,6 +58,14 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def set_search
+    @search_term = params[:search_term]
+  end
+
+  def clear_search
+    @search_term = nil
+  end
 
   def filter_by_city
     columns = %w[city name email telephone_number]

@@ -20,6 +20,10 @@
         </div>
       <% end %>
 
+      <div class="col-md-3">
+        <%= hidden_field_tag :search_term, @search_term %>
+      </div>
+
       <div class="col-12">
         <%= form.submit "Add User", class: "btn btn-primary" %>
       </div>
