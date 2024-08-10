@@ -1,9 +1,11 @@
-<tr id="<%= dom_id(user) %>">
-  <td><%= user.name %></td>
-  <td><%= user.email %></td>
-  <td><%= user.city %></td>
-  <td class="hide-on-mobile"><%= user.telephone_number %></td>
-  <td class="d-flex justify-content-end">
-    <%= link_to 'X', user_path(user), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn" %>
-  </td>
-</tr>
+<%= turbo_frame_tag "user_row" do %>
+  <tr id="<%= dom_id(user) %>">
+    <td><%= user.name %></td>
+    <td><%= user.email %></td>
+    <td><%= user.city %></td>
+    <td class="hide-on-mobile"><%= user.telephone_number %></td>
+    <td class="d-flex justify-content-end">
+      <%= link_to 'X', user_path(user, search_term: @search_term), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "btn" %>
+    </td>
+  </tr>
+<% end %>

@@ -1,18 +1,16 @@
 class UsersController < ApplicationController
-  before_action :set_search, only: %i[index create]
+  before_action :set_search, only: %i[index create destroy]
+  before_action :set_users_collection, only: %i[index destroy]
 
   def index
-    @users = User.all.order(created_at: :asc)
     @user = User.new
-
-    filter_users
 
     respond_to do |format|
       format.html
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users }),
-          turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new })
+          turbo_stream.replace('new_user_form', partial: 'form', locals: { user: @user, search_term: @search_term })
         ]
       end
     end
@@ -22,21 +20,20 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      @users = User.all.order(created_at: :asc)
-      filter_users
+      set_users_collection
 
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users }),
-            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new })
+            turbo_stream.replace('new_user_form', partial: 'form', locals: { user: User.new, search_term: @search_term })
           ]
         end
       end
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('new_user_form', partial: 'form', locals: { user: @user })
+          render turbo_stream: turbo_stream.replace('new_user_form', partial: 'form', locals: { user: @user, search_term: @search_term })
         end
       end
     end
@@ -46,19 +43,30 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
 
-    redirect_to users_path, notice: 'User was successfully deleted.'
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users })
+        ]
+      end
+    end
   end
 
   def reset
     ResetUsersToInitialStateService.call
 
-    redirect_to users_path, notice: 'Test successfully reset.'
+    redirect_to users_path
   end
 
   private
 
   def set_search
     @search_term = params[:search_term]
+  end
+
+  def set_users_collection
+    @users = User.all.order(created_at: :asc)
+    filter_users
   end
 
   def filter_users

@@ -10,9 +10,9 @@
       </tr>
     </thead>
     <tbody data-filter-users-target="table"> 
-      <% users.each do |user| %>
-        <%= render partial: 'users/user_row', locals: { user: user } %>
-      <% end %>          
-      </tbody>
+    <% users.each do |user| %>
+      <%= render partial: 'users/user_row', locals: { user: user } %>
+    <% end %>          
+    </tbody>
   </table>
 <% end %>
