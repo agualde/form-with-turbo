@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     @users = User.all.order(created_at: :asc)
     @user = User.new
 
-    filter_by_city if @search_term.present?
+    filter_users
 
     respond_to do |format|
       format.html
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @users = User.all.order(created_at: :asc)
-      filter_by_city if @search_term.present?
+      filter_users
 
       respond_to do |format|
         format.turbo_stream do
@@ -61,7 +61,9 @@ class UsersController < ApplicationController
     @search_term = params[:search_term]
   end
 
-  def filter_by_city
+  def filter_users
+    return unless @search_term.present?
+
     columns = %w[city name email telephone_number]
     conditions = columns.map { |column| "#{column} LIKE ?" }.join(" OR ")
     values = Array.new(columns.size, "%#{@search_term}%")
