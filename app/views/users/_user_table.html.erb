@@ -9,7 +9,7 @@
         <th class="d-flex justify-content-end">Delete User</th>
       </tr>
     </thead>
-    <tbody data-filter-users-target="table"> 
+    <tbody id="user_table_body" data-filter-users-target="table"> 
     <% users.each do |user| %>
       <%= render partial: 'users/user_row', locals: { user: user } %>
     <% end %>          

@@ -7,7 +7,9 @@ export default class extends Controller {
     console.log("Hello from users search controller")
   }
 
-  filter() {
+  filter(event) {
+    if (event.key == 'Enter') return
+
     clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
       this.formTarget.requestSubmit()

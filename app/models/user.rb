@@ -7,7 +7,8 @@ class User < ApplicationRecord
   validates :telephone_number, numericality: { only_integer: true }, length: { minimum: 9, maximum: 15 }, allow_blank: true
   validate :with_valid_city
 
-  after_commit :broadcast_user_update, on: [:create, :destroy]
+  after_create_commit -> { broadcast_user_creation(self) }
+  after_destroy_commit -> { broadcast_user_deletion(self) }
 
   private
 
@@ -29,12 +30,19 @@ class User < ApplicationRecord
     @cities_set ||= Set.new(File.readlines("lib/assets/cities.txt").map { |city| city.strip.downcase })
   end
 
-  def broadcast_user_update
-    Turbo::StreamsChannel.broadcast_update_to(
+  def broadcast_user_creation(user)
+    Turbo::StreamsChannel.broadcast_append_to(
       "users",
-      target: "user_table",
-      partial: "users/user_table",
-      locals: { users: User.all.order(created_at: :asc) }
+      target: "user_table_body",
+      partial: "users/user_row",
+      locals: { user: user }
+    )
+  end
+  
+  def broadcast_user_deletion(user)
+    Turbo::StreamsChannel.broadcast_remove_to(
+      "users",
+      target: "user_#{user.id}"
     )
   end
 end
