@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  before_action :set_search, only: %i[index create destroy]
   before_action :set_users_collection, only: %i[index destroy]
 
   def index
@@ -67,16 +66,13 @@ class UsersController < ApplicationController
 
   private
 
-  def set_search
-    @search_term = params[:search_term]
-  end
-
   def set_users_collection
     @users = User.all.order(created_at: :asc)
     filter_users
   end
 
   def filter_users
+    @search_term = params[:search_term]
     return unless @search_term.present?
 
     columns = %w[city name email telephone_number]
