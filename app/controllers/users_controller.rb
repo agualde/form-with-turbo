@@ -54,8 +54,15 @@ class UsersController < ApplicationController
 
   def reset
     ResetUsersToInitialStateService.call
+    set_users_collection
 
-    redirect_to users_path
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace('user_table', partial: 'user_table', locals: { users: @users })
+        ]
+      end
+    end
   end
 
   private
